@@ -28,11 +28,6 @@
                 }
             }
 
-            if (!cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                // O aquecimento foi concluído
-                // Execute qualquer lógica adicional aqui
-            }
 
             return tempoRestante;
         }

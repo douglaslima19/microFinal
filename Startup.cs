@@ -1,5 +1,6 @@
 ﻿
 using micro.Domain.Interface;
+using micro.Repository;
 using micro.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,8 @@ public class Startup
     {
         services.AddControllersWithViews();
         services.AddScoped<IMicroOndasServices, MicroOndasService>();
+        services.AddScoped<IProgramaAquecimento, ProgramaAquecimentoRepository>();
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
