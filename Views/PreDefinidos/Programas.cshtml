@@ -1,0 +1,99 @@
+﻿@model List<ProgramaAquecimento>
+
+@{
+    ViewData["Title"] = "Programas Pré-Definidos";
+}
+
+<h1>Programas pré-definidos</h1>
+
+<div id="botaoPausar" style="display: none;">
+    <button type="button" class="btn btn-danger" id="pauseCountdown">Pausar</button>
+    <button type="button" class="btn btn-success" id="resumeCountdown" style="display: none;">Continuar</button>
+</div>
+<div id="contador" style="display: none;">
+    <p>Tempo restante: <span id="tempoRestante"></span> segundos</p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Alimento</th>
+            <th scope="col">Tempo em Segundos</th>
+            <th scope="col">Potência</th>
+            <th scope="col">Aquecimento</th>
+            <th scope="col">Instruções</th>
+            <th scope="col">Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var programa in Model)
+        {
+            <tr>
+                <td align="left">@programa.Nome</td>
+                <td align="left">@programa.Alimento</td>
+                <td align="left">@programa.TempoEmSegundos</td>
+                <td>@programa.Potencia</td>
+                <td>@programa.StringAquecimento</td>
+                <td>@programa.Instrucoes</td>
+                <td>
+                    <button type="button" class="startCountdownBtn btn btn-primary" data-tempo="@programa.TempoEmSegundos">Iniciar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var contador;
+        var tempoRestante;
+        var pausado = false;
+
+        $(".startCountdownBtn").click(function () {
+            var tempoEmSegundos = $(this).data("tempo");
+            if (tempoEmSegundos && !isNaN(tempoEmSegundos) && tempoEmSegundos > 0) {
+                $(this).hide();
+                $("#botaoPausar").show();
+                $("#contador").show();
+                startCountdown(tempoEmSegundos);
+            } else {
+                alert("Por favor, insira um tempo válido em segundos.");
+            }
+        });
+
+        $("#pauseCountdown").click(function () {
+            clearInterval(contador);
+            pausado = true;
+            $(this).hide();
+            $("#resumeCountdown").show();
+        });
+
+        $("#resumeCountdown").click(function () {
+            $(this).hide();
+            $("#pauseCountdown").show();
+            pausado = false;
+            startCountdown(tempoRestante);
+        });
+
+        function startCountdown(tempoEmSegundos) {
+            tempoRestante = tempoEmSegundos;
+            $("#tempoRestante").text(tempoRestante);
+
+            contador = setInterval(function () {
+                if (!pausado) {
+                    tempoRestante--;
+                    $("#tempoRestante").text(tempoRestante);
+
+                    if (tempoRestante <= 0) {
+                        clearInterval(contador);
+                        $("#botaoPausar").hide();
+                        alert("PI-PI-PI-PI (Barulho de micro-ondas)!");
+                    }
+                }
+            }, 1000);
+        }
+    });
+</script>

@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Pagina inicial";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bem vindo</h1>
+    <p>Micro Ondas Benner</p>
+
+    <form id="countdownForm">
+        <label for="tempoEmSegundos">Tempo (segundos):</label>
+        <input type="text" id="tempoEmSegundos" name="tempoEmSegundos" />
+        <label for="potencia">Potencia:</label>
+        <input type="text" id="potencia" name="potencia" />
+        <button type="button" id="startCountdown">Iniciar Contagem Regressiva</button>
+    </form>
+
+    <div id="contador" style="display: none;">
+        <p>Tempo restante: <span id="tempoRestante"></span> segundos</p>
+    </div>
+    <button id="pauseCountdown" class="btn btn-danger" style="display: none;">Pausar</button>
+    <button id="resumeCountdown" class="btn btn-success" style="display: none;">Continuar</button>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var contador;
+        var tempoRestante;
+
+        $("#startCountdown").click(function () {
+            var tempoEmSegundos = $("#tempoEmSegundos").val();
+            if (tempoEmSegundos && !isNaN(tempoEmSegundos) && tempoEmSegundos > 0) {
+                $("#countdownForm").hide();
+
+                $("#pauseCountdown, #resumeCountdown").show();
+                $("#contador").show();
+                startCountdown(tempoEmSegundos);
+            } else {
+                alert("Por favor, insira um tempo válido em segundos.");
+            }
+        });
+
+        $("#pauseCountdown").click(function () {
+            clearInterval(contador);
+            $(this).hide();
+            $("#resumeCountdown").show();
+        });
+
+        $("#resumeCountdown").click(function () {
+            $(this).hide();
+            $("#pauseCountdown").show();
+            startCountdown(tempoRestante);
+        });
+
+        function startCountdown(tempoEmSegundos) {
+            tempoRestante = tempoEmSegundos;
+            $("#tempoRestante").text(tempoRestante);
+
+            contador = setInterval(function () {
+                tempoRestante--;
+                $("#tempoRestante").text(tempoRestante);
+
+                if (tempoRestante <= 0) {
+                    clearInterval(contador);
+                    $("#pauseCountdown, #resumeCountdown").hide();
+                    alert("PI-PI-PI-PI (Barulho de micro-ondas)");
+                    location.reload();
+                }
+            }, 1000);
+        }
+    });
+</script>
